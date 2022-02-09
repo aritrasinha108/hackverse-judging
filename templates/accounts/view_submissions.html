@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+Submissions
+{% endblock %}
+
+{% block content %}
+<h1>Submissions</h1>
+
+<div class="container">
+    <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Team</th>
+            <th scope="col">DevFolio</th>
+            <th scope="col">Codebase</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% for s in submissions %}
+            <td>{{s.title}}</td>
+            <td>{{s.description}}</td>
+            <td>{{s.team_name}}</td>
+            <td><a href={{s.devfolio_link}}>{{s.devfolio_link}}</a> </td>
+            <td><a href={{s.codebase_link}}>{{s.codebase_link}}</a> </td>
+            <td><a href="/auth/submissions/{{s.id}}/edit">Edit</a> </td>
+            <td><a href="/auth/submissions/{{s.id}}/delete">Delete</a> </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      
+</div>
+
+{% endblock %}
