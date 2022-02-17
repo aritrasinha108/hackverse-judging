@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.admin.views.decorators import staff_member_required
-from .forms import NewUserCreationForm, SubmissionForm
+from .forms import NewUserCreationForm, SubmissionForm, JudgementForm
 from .models import Submissions
 # Create your views here.
 
@@ -56,3 +56,14 @@ def edit_submission(request,sub_id):
 def delete_submission(request, sub_id):
     Submissions.objects.filter(id=sub_id).delete()
     return redirect('/auth/submissions')
+
+def view_submission(request,sub_id):
+  submission = Submissions.objects.get(pk = sub_id)
+  if request.method == 'POST':
+        judgeform = JudgementForm(request.POST, instance=submission) 
+        if judgeform.is_valid():
+            submission.total = judgeform.cleaned_data['param1'] + judgeform.cleaned_data['param2'] + judgeform.cleaned_data['param3'] 
+            judgeform.save() 
+            submission.save()
+  form = JudgementForm(instance= submission)
+  return render(request, 'accounts/view_submission.html', {'submission': submission,'form':form})
