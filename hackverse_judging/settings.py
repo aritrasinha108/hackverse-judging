@@ -131,4 +131,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_URL = '/auth/login'
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/auth/submissions'
+LOGOUT_URL = '/logout'
+LOGOUT_REDIRECT_URL = '/'
