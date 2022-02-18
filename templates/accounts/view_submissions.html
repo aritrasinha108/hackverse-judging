@@ -7,8 +7,9 @@ Submissions
 {% endblock %}
 
 {% block content %}
-<h1>Submissions</h1>
-
+<h1 class="text-center">Submissions</h1>
+<br>
+<br>
 <div class="container">
     <table class="table">
         <thead class="thead-dark">
@@ -18,19 +19,26 @@ Submissions
             <th scope="col">Team</th>
             <th scope="col">DevFolio</th>
             <th scope="col">Codebase</th>
+            <th scope="col">Param 1</th>
+            <th scope="col">Param 2</th>
+            <th scope="col">Param 3</th>
+            <th scope="col">Total</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             {% for s in submissions %}
-            <td>{{s.title}}</td>
+            <td><a href="/auth/submissions/{{s.id}}">{{s.title}}</a></td>
             <td>{{s.description}}</td>
             <td>{{s.team_name}}</td>
-            <td><a href={{s.devfolio_link}}>{{s.devfolio_link}}</a> </td>
-            <td><a href={{s.codebase_link}}>{{s.codebase_link}}</a> </td>
-            <td><a href="/auth/submissions/{{s.id}}/edit">Edit</a> </td>
-            <td><a href="/auth/submissions/{{s.id}}/delete">Delete</a> </td>
+            <td><a href={{s.devfolio_link}}>Click  Here</a> </td>
+            <td><a href={{s.codebase_link}}>Click Here</a> </td>
+            <td>{{s.param1}}</td>
+            <td>{{s.param2}}</td>
+            <td>{{s.param3}}</td>
+            <td>{{s.total}}</td>
+            <td><a href="/auth/submissions/{{s.id}}/edit">Edit</a> <a href="/auth/submissions/{{s.id}}/delete">Delete</a> </td>
           </tr>
           {% endfor %}
         </tbody>

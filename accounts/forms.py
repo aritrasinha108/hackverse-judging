@@ -1,8 +1,9 @@
-from dataclasses import fields
+from dataclasses import field, fields
+from wsgiref.validate import validator
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User,Submissions
-
+from django.core.validators import MinValueValidator, MaxValueValidator
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
@@ -21,4 +22,9 @@ class SubmissionForm(forms.ModelForm):
     class Meta:
         model = Submissions
         fields = ['title', 'description', 'devfolio_link', 'codebase_link', 'team_name', 'member_name', 'member_email', 'member_phone']
-    
+
+class JudgementForm(forms.ModelForm):
+    class Meta:
+        model = Submissions
+        fields = ['param1', 'param2', 'param3']
+        
