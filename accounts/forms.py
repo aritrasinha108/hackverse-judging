@@ -4,8 +4,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User,Submissions
 from django.core.validators import MinValueValidator, MaxValueValidator
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
 
 class NewUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
@@ -28,3 +26,6 @@ class JudgementForm(forms.ModelForm):
         model = Submissions
         fields = ['param1', 'param2', 'param3']
         
+class AssignmentForm(forms.Form):
+    judge1 = forms.CharField(label="Judge 1 username", max_length=200, required=True)
+    judge2 = forms.CharField(label="Judge 2 username", max_length=200, required=True)
