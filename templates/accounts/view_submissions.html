@@ -11,6 +11,9 @@ Submissions
 <br>
 <br>
 <div class="container">
+  {% if user.is_staff %}
+    <a href="{% url 'download_csv' %}" class="btn btn-dark text-light">Download as CSV</a>
+  {% endif %}
     <table class="table">
         <thead class="thead-dark">
           <tr>
@@ -38,7 +41,12 @@ Submissions
             <td>{{s.param2}}</td>
             <td>{{s.param3}}</td>
             <td>{{s.total}}</td>
-            <td><a href="/auth/submissions/{{s.id}}/edit">Edit</a> <a href="/auth/submissions/{{s.id}}/delete">Delete</a> </td>
+            <td>
+              <a href="/auth/submissions/{{s.id}}">Evaluate</a>
+              {% if user.is_staff %}
+              <a href="/auth/submissions/{{s.id}}/edit">Edit</a> <a href="/auth/submissions/{{s.id}}/delete">Delete</a>
+              {% endif %}
+            </td>
           </tr>
           {% endfor %}
         </tbody>

@@ -79,8 +79,8 @@ DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'hackverse_judging',
-        'USER': 'MYSELF',
-        'PASSWORD': 'JohnyInglis02*',
+        'USER': 'mysqluser',
+        'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '3306',
     }
