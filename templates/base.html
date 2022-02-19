@@ -25,6 +25,17 @@
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="/auth/submissions">Home</a>
               </li>
+              {% if request.user.is_organiser %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/auth/submissions/new">New Submission</a>
+              </li>
+              {% endif %}
+
+              {% if request.user.is_staff %}
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/auth/register">New User</a>
+              </li>
+              {% endif %}
             </ul>
             <div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-row-reverse">
@@ -48,6 +59,13 @@
         </div>
       </nav>
 
+
+      {% if message %}
+        {% for m in messages %}
+          <div class="alert alert-primary" role="alert">{{m}}</div>
+        {% endfor %}
+      {% endif%}
+    
     {% block content %}
 
     {% endblock %}

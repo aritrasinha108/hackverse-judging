@@ -1,20 +1,22 @@
 from django.shortcuts import render,redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
-
-from .forms import NewUserCreationForm, SubmissionForm, JudgementForm
-from .models import Submissions
-
 import csv
+from .forms import NewUserCreationForm, SubmissionForm, JudgementForm,AssignmentForm
+from .models import Submissions, User
 # Create your views here.
 
 @staff_member_required
 def register(request):
     if request.method == 'POST':
         form = NewUserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('View')
+        if form.is_valid()
+           form.save()
+           user = form.instance
+           if user.is_organiser:
+               user.is_staff = True
+               user.save()
+           return redirect('View')
     else:
         form = NewUserCreationForm()
     args = {
@@ -40,8 +42,10 @@ def create_submission(request):
 def view_all_submissions(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    
-    submissions = Submissions.objects.all
+    if request.user.is_staff:
+        submissions = Submissions.objects.all
+    else:
+        submissions = Submissions.objects.filter(judges_assigned = request.user)
     return render(request,'accounts/view_submissions.html', {'submissions': submissions})
 
 @staff_member_required
@@ -72,9 +76,26 @@ def view_submission(request,sub_id):
             judgeform.save() 
             submission.save()
             return redirect('View')
-  form = JudgementForm(instance= submission)
-  return render(request, 'accounts/view_submission.html', {'submission': submission,'form':form})
+        submission = Submissions.objects.get(pk = sub_id) 
+        form = AssignmentForm(request.POST)
+        if form.is_valid():
+            j1 = form.cleaned_data['judge1']
+            j2 = form.cleaned_data['judge2']
+            try:
+                judge1 = User.objects.get(username = j1)
+                judge2 = User.objects.get(username = j2)
+            except DoesNotExist:
+                return redirect(request, '/auth/submissions')
 
+            submission.judges_assigned.clear()
+            submission.judges_assigned.add(judge1,judge2)
+            submission.save()
+  form = JudgementForm(instance= submission)
+  judges = submission.judges_assigned.all()
+  if len(judges) > 0:
+    assign_form = AssignmentForm(initial={'judge1': judges[0].username, 'judge2': judges[1].username})
+  return render(request, 'accounts/view_submission.html', {'submission': submission,'form':form, 'assign_form': assign_form})
+  
 @staff_member_required
 def download_csv(request):
     submissions = Submissions.objects.all()

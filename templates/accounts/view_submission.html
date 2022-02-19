@@ -10,15 +10,27 @@
 {% block content %}
 <div class="card my-5" style="box-shadow:10px 10px 5px black;" data-id="<%= book.id %>">
     <div class="card-body">
-        <h5 class="card-title font-weight-bold">{{submission.title}}</h5>
-        <h6 class="card-subtitle mb-2 text-muted"> -by {{submission.team_name}} </h6>
+        <h5 class="card-title font-weight-bold text-center">{{submission.title}}</h5>
+        <h6 class="card-subtitle mb-2 text-muted text-center"> -by {{submission.team_name}} </h6>
+        <h6 class="card-subtitle mb-2 text-muted text-center"> -lead by {{submission.member_name}} </h6>
+        <h6 class="card-subtitle mb-2 text-muted text-center"> -{{submission.member_email}}, {{submission.member_phone}} </h6>
         <p class="card-text text-center font-italic">{{ submission.description }}</p>
            <br>
+           {% if request.user.is_staff %}
+           <form method="post">
+            {% csrf_token %}
+                {{ assign_form | crispy }}
+                <button type="submit" class="btn btn-primary mt-3">Save</button>
+           </form>
+           <br>
+           {% endif %}
             <div class="d-flex flex-row justify-content-around">
             <a href="{{submission.devfolio_link}}" target="_blank" class="btn btn-success">Go to Devefolio submission</a>
             <a href="{{submission.codebase_link}}" target="_blank" class="btn btn-danger">Look at the codebase</a>
+            {% if request.user.is_staff %}
             <a href="/auth/submissions/{{submission.id}}/edit" class="btn btn-success">Edit Submission</a>
             <a href="/auth/submissions/{{submission.id}}/delete" class="btn btn-danger">Delete Submission</a>
+            {% endif%}
             </div>
                 <form method="post">
                     {% csrf_token %}

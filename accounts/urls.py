@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.urls import path
 import accounts.views as views
 
@@ -8,5 +9,5 @@ urlpatterns = [
     path('submissions/<int:sub_id>/edit', views.edit_submission, name="Edit"),
     path('submissions/<int:sub_id>/delete', views.delete_submission, name="Delete"),
     path('submissions/<int:sub_id>', views.view_submission, name="ViewSub"),
-    path('download_submissions', views.download_csv, name='download_csv'),
+    path('download_submissions', views.download_csv, name='download_csv')
 ]

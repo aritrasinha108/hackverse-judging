@@ -18,8 +18,10 @@ Submissions
         <thead class="thead-dark">
           <tr>
             <th scope="col">Title</th>
-            <th scope="col">Description</th>
             <th scope="col">Team</th>
+            <th scope="col">Leader</th>
+            <th scope="col">Contact Email</th>
+            <th scope="col">Contact Phone</th>
             <th scope="col">DevFolio</th>
             <th scope="col">Codebase</th>
             <th scope="col">Param 1</th>
@@ -33,8 +35,10 @@ Submissions
           <tr>
             {% for s in submissions %}
             <td><a href="/auth/submissions/{{s.id}}">{{s.title}}</a></td>
-            <td>{{s.description}}</td>
             <td>{{s.team_name}}</td>
+            <td>{{s.member_name}}</td>
+            <td>{{s.member_email}}</td>
+            <td>{{s.member_phone}}</td>
             <td><a href={{s.devfolio_link}}>Click  Here</a> </td>
             <td><a href={{s.codebase_link}}>Click Here</a> </td>
             <td>{{s.param1}}</td>
