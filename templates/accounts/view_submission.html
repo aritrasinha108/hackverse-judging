@@ -32,6 +32,7 @@
             <a href="/auth/submissions/{{submission.id}}/delete" class="btn btn-danger">Delete Submission</a>
             {% endif%}
             </div>
+            {% if request.user in submission.judges_assigned.all %}
                 <form method="post">
                     {% csrf_token %}
 
@@ -39,6 +40,7 @@
 
                     <button type="submit" class="btn btn-primary mt-3">Save</button>
                 </form>
+            {% endif%}
     </div>
 </div>
 {% endblock %}

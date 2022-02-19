@@ -3,14 +3,15 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 import csv
 from .forms import NewUserCreationForm, SubmissionForm, JudgementForm,AssignmentForm
-from .models import Submissions, User
+from .models import Submissions, User, Judgement
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 
 @staff_member_required
 def register(request):
     if request.method == 'POST':
         form = NewUserCreationForm(request.POST)
-        if form.is_valid()
+        if form.is_valid():
            form.save()
            user = form.instance
            if user.is_organiser:
@@ -46,6 +47,7 @@ def view_all_submissions(request):
         submissions = Submissions.objects.all
     else:
         submissions = Submissions.objects.filter(judges_assigned = request.user)
+
     return render(request,'accounts/view_submissions.html', {'submissions': submissions})
 
 @staff_member_required
@@ -70,11 +72,14 @@ def delete_submission(request, sub_id):
 def view_submission(request,sub_id):
   submission = Submissions.objects.get(pk = sub_id)
   if request.method == 'POST':
-        judgeform = JudgementForm(request.POST, instance=submission) 
+        judgement,created = Judgement.objects.get_or_create(submission=submission, judge = request.user)
+        print(judgement)
+        judgeform = JudgementForm(request.POST) 
         if judgeform.is_valid():
-            submission.total = judgeform.cleaned_data['param1'] + judgeform.cleaned_data['param2'] + judgeform.cleaned_data['param3'] 
-            judgeform.save() 
-            submission.save()
+            judgement.param1 = judgeform.cleaned_data['param_1'] 
+            judgement.param2 = judgeform.cleaned_data['param_2'] 
+            judgement.param3 = judgeform.cleaned_data['param_3'] 
+            judgement.save()
             return redirect('View')
         submission = Submissions.objects.get(pk = sub_id) 
         form = AssignmentForm(request.POST)
@@ -84,16 +89,27 @@ def view_submission(request,sub_id):
             try:
                 judge1 = User.objects.get(username = j1)
                 judge2 = User.objects.get(username = j2)
-            except DoesNotExist:
-                return redirect(request, '/auth/submissions')
+            except ObjectDoesNotExist:
+                return redirect('View')
 
             submission.judges_assigned.clear()
             submission.judges_assigned.add(judge1,judge2)
+            Judgement.objects.filter(submission=submission).delete()
+            judgement1 = Judgement(submission=submission, judge = judge1)
+            judgement2 = Judgement(submission=submission, judge = judge2)
             submission.save()
-  form = JudgementForm(instance= submission)
+            judgement1.save()
+            judgement2.save()
+  try:
+    judgement = Judgement.objects.get(judge = request.user, submission=submission)
+    form = JudgementForm(initial={'param_1': judgement.param1, 'param_2': judgement.param2, 'param_3': judgement.param3 }) 
+  except ObjectDoesNotExist:
+    form = JudgementForm() 
   judges = submission.judges_assigned.all()
   if len(judges) > 0:
     assign_form = AssignmentForm(initial={'judge1': judges[0].username, 'judge2': judges[1].username})
+  else:
+    assign_form = AssignmentForm()  
   return render(request, 'accounts/view_submission.html', {'submission': submission,'form':form, 'assign_form': assign_form})
   
 @staff_member_required

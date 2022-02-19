@@ -17,6 +17,7 @@ Submissions
     <table class="table">
         <thead class="thead-dark">
           <tr>
+            
             <th scope="col">Title</th>
             <th scope="col">Team</th>
             <th scope="col">Leader</th>
@@ -24,12 +25,30 @@ Submissions
             <th scope="col">Contact Phone</th>
             <th scope="col">DevFolio</th>
             <th scope="col">Codebase</th>
-            <th scope="col">Param 1</th>
-            <th scope="col">Param 2</th>
-            <th scope="col">Param 3</th>
+            <th scope="col" class="text-center" colspan="3">Judge 1</th>
+            <th scope="col"colspan="3" class="text-center">Judge 2</th>
             <th scope="col">Total</th>
             <th scope="col">Actions</th>
           </tr>
+          <tr>
+          <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col">Param 1</th>
+            <th scope="col">Param 2</th>
+            <th scope="col">Param 3</th>
+            <th scope="col">Param 1</th>
+            <th scope="col">Param 2</th>
+            <th scope="col">Param 3</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        
+          </tr>        
+
         </thead>
         <tbody>
           <tr>
@@ -41,9 +60,18 @@ Submissions
             <td>{{s.member_phone}}</td>
             <td><a href={{s.devfolio_link}}>Click  Here</a> </td>
             <td><a href={{s.codebase_link}}>Click Here</a> </td>
-            <td>{{s.param1}}</td>
-            <td>{{s.param2}}</td>
-            <td>{{s.param3}}</td>
+            {% for j in s.judgement_set.all %}
+            <td>{{j.param1}}</td>
+            <td>{{j.param2}} </td>
+            <td>{{j.param3}} </td>
+            {% empty %}
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            {% endfor %}
             <td>{{s.total}}</td>
             <td>
               <a href="/auth/submissions/{{s.id}}">Evaluate</a>

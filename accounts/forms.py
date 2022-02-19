@@ -21,10 +21,11 @@ class SubmissionForm(forms.ModelForm):
         model = Submissions
         fields = ['title', 'description', 'devfolio_link', 'codebase_link', 'team_name', 'member_name', 'member_email', 'member_phone']
 
-class JudgementForm(forms.ModelForm):
-    class Meta:
-        model = Submissions
-        fields = ['param1', 'param2', 'param3']
+class JudgementForm(forms.Form):
+    validator = [ MinValueValidator(0), MaxValueValidator(100)]
+    param_1 = forms.IntegerField(validators=validator,required=True) 
+    param_2 = forms.IntegerField(validators=validator,required=True) 
+    param_3 = forms.IntegerField(validators=validator,required=True) 
         
 class AssignmentForm(forms.Form):
     judge1 = forms.CharField(label="Judge 1 username", max_length=200, required=True)

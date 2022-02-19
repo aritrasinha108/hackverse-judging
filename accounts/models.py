@@ -19,12 +19,25 @@ class Submissions(models.Model):
     member_phone = models.CharField(max_length=13)
     judges_assigned = models.ManyToManyField(User)
     validator = [ MinValueValidator(0), MaxValueValidator(100)]
-    param1 = models.IntegerField(validators=validator , default=0)
-    param2 = models.IntegerField(validators=validator, default=0)
-    param3 = models.IntegerField(validators=validator, default=0)
-    total = models.IntegerField(default=0)
-
 
     def __str__(self):
         return self.title + " by " + self.team_name
+    
+    def total(self):
+        judgements = Judgement.objects.filter(submission = self)
+        tot = 0
+        for j in judgements:
+            tot = tot + j.total()             
+        return tot
 
+class Judgement(models.Model):
+    judge = models.ForeignKey(User, models.CASCADE)
+    submission = models.ForeignKey(Submissions, on_delete=models.CASCADE)
+    validator = [ MinValueValidator(0), MaxValueValidator(100)]
+    param1 = models.IntegerField(validators=validator , default=0)
+    param2 = models.IntegerField(validators=validator, default=0)
+    param3 = models.IntegerField(validators=validator, default=0)
+
+
+    def total(self):
+        return self.param1 + self.param2 + self.param3
