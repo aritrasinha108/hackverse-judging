@@ -1,5 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
+import csv
 from .forms import NewUserCreationForm, SubmissionForm, JudgementForm,AssignmentForm
 from .models import Submissions, User
 # Create your views here.
@@ -8,12 +10,13 @@ from .models import Submissions, User
 def register(request):
     if request.method == 'POST':
         form = NewUserCreationForm(request.POST)
-        if form.is_valid():
+        if form.is_valid()
            form.save()
            user = form.instance
            if user.is_organiser:
                user.is_staff = True
-               user.save()          
+               user.save()
+           return redirect('View')
     else:
         form = NewUserCreationForm()
     args = {
@@ -27,6 +30,7 @@ def create_submission(request):
         form = SubmissionForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('View')
     else:
         form = SubmissionForm()
     args = {
@@ -37,7 +41,7 @@ def create_submission(request):
 
 def view_all_submissions(request):
     if not request.user.is_authenticated:
-        return redirect('/')
+        return redirect('login')
     if request.user.is_staff:
         submissions = Submissions.objects.all
     else:
@@ -51,7 +55,7 @@ def edit_submission(request,sub_id):
         form = SubmissionForm(request.POST, instance= sub)
         if form.is_valid():
             form.save() 
-
+            return redirect('View')
     form = SubmissionForm(instance= sub)
     args = {
         'form': form,
@@ -71,6 +75,7 @@ def view_submission(request,sub_id):
             submission.total = judgeform.cleaned_data['param1'] + judgeform.cleaned_data['param2'] + judgeform.cleaned_data['param3'] 
             judgeform.save() 
             submission.save()
+            return redirect('View')
         submission = Submissions.objects.get(pk = sub_id) 
         form = AssignmentForm(request.POST)
         if form.is_valid():
@@ -90,23 +95,16 @@ def view_submission(request,sub_id):
   if len(judges) > 0:
     assign_form = AssignmentForm(initial={'judge1': judges[0].username, 'judge2': judges[1].username})
   return render(request, 'accounts/view_submission.html', {'submission': submission,'form':form, 'assign_form': assign_form})
+  
+@staff_member_required
+def download_csv(request):
+    submissions = Submissions.objects.all()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="submissions.csv"'
 
-
-# @staff_member_required
-# def assign_judge(request, sub_id):
-#     if request.method == "POST":
-#         submission = Submissions.objects.get(pk = sub_id) 
-#         form = AssignmentForm(request.POST)
-#         if form.is_valid():
-#             j1 = form.cleaned_data['judge1']
-#             j2 = form.cleaned_data['judge2']
-#             try:
-#                 judge1 = User.objects.get(username = j1)
-#                 judge2 = User.objects.get(username = j2)
-#             except DoesNotExist:
-#                 return redirect(request, '/auth/submissions')
-#             submission.judges_assigned.add(judge1,judge2)
-#             submission.save()
-#             return redirect(request, "/auth/submissions/"+ str(sub_id))
-    
-#     return redirect(request, "/auth/submissions/"+ str(sub_id))
+    writer = csv.writer(response)
+    writer.writerow(['id', 'title', 'description', 'devfolio_link', 'codebase_link', 'team_name', 'member_name', 'member_email', 'member_phone', 'judge', 'param1', 'param2', 'param3', 'total'])
+    subs = submissions.values_list('id', 'title', 'description', 'devfolio_link', 'codebase_link', 'team_name', 'member_name', 'member_email', 'member_phone', 'judge', 'param1', 'param2', 'param3', 'total')
+    for s in subs:
+        writer.writerow(s)
+    return response
