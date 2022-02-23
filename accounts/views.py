@@ -111,16 +111,3 @@ def view_submission(request,sub_id):
   else:
     assign_form = AssignmentForm()  
   return render(request, 'accounts/view_submission.html', {'submission': submission,'form':form, 'assign_form': assign_form})
-  
-@staff_member_required
-def download_csv(request):
-    submissions = Submissions.objects.all()
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="submissions.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(['id', 'title', 'description', 'devfolio_link', 'codebase_link', 'team_name', 'member_name', 'member_email', 'member_phone', 'judge', 'param1', 'param2', 'param3', 'total'])
-    subs = submissions.values_list('id', 'title', 'description', 'devfolio_link', 'codebase_link', 'team_name', 'member_name', 'member_email', 'member_phone', 'judge', 'param1', 'param2', 'param3', 'total')
-    for s in subs:
-        writer.writerow(s)
-    return response
