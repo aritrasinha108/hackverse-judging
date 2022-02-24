@@ -22,8 +22,10 @@ Submissions
             <th scope="col">Contact Phone</th>
             <th scope="col">DevFolio</th>
             <th scope="col">Codebase</th>
-            <th scope="col" class="text-center" colspan="3">Judge 1</th>
-            <th scope="col"colspan="3" class="text-center">Judge 2</th>
+            <th scope="col">Judge 1 Name</th>
+            <th scope="col">Judge 2 Name</th>
+            <th scope="col" class="text-center" colspan="3">Judge 1 Marks</th>
+            <th scope="col"colspan="3" class="text-center">Judge 2 Marks</th>
             <th scope="col">Total</th>
             <th scope="col">Actions</th>
           </tr>
@@ -35,12 +37,14 @@ Submissions
             <th scope="col"></th>
             <th scope="col"></th>
             <th scope="col"></th>
-            <th scope="col">Param 1</th>
-            <th scope="col">Param 2</th>
-            <th scope="col">Param 3</th>
-            <th scope="col">Param 1</th>
-            <th scope="col">Param 2</th>
-            <th scope="col">Param 3</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col">Param1</th>
+            <th scope="col">Param2</th>
+            <th scope="col">Param3</th>
+            <th scope="col">Param1</th>
+            <th scope="col">Param2</th>
+            <th scope="col">Param3</th>
             <th scope="col"></th>
             <th scope="col"></th>
         
@@ -57,6 +61,8 @@ Submissions
             <td>{{s.member_phone}}</td>
             <td><a href={{s.devfolio_link}}>Click  Here</a> </td>
             <td><a href={{s.codebase_link}}>Click Here</a> </td>
+            <td> {{ s.Judge1 }}</td>
+            <td> {{ s.Judge2 }}</td>
             {% for j in s.judgement_set.all %}
             <td>{{j.param1}}</td>
             <td>{{j.param2}} </td>
@@ -71,9 +77,10 @@ Submissions
             {% endfor %}
             <td>{{s.total}}</td>
             <td>
-              <a href="/auth/submissions/{{s.id}}">Evaluate</a>
               {% if user.is_staff %}
               <a href="/auth/submissions/{{s.id}}/edit">Edit</a> <a href="/auth/submissions/{{s.id}}/delete">Delete</a>
+              {% else %}
+                <a href="/auth/submissions/{{s.id}}">Evaluate</a>
               {% endif %}
             </td>
           </tr>

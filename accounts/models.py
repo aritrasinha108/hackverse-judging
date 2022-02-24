@@ -29,7 +29,31 @@ class Submissions(models.Model):
         for j in judgements:
             tot = tot + j.total()             
         return tot
+    
+    def Judge1(self):
+        judges = self.judges_assigned.all() 
+        return judges[0].username
 
+    def Judge2(self):
+       judges = self.judges_assigned.all() 
+       return judges[1].username
+
+    def judge_1_marks(self):
+        judgements = Judgement.objects.filter(submission = self).first()
+        return str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3)
+    
+    def judge_1_total(self):
+        judgements = Judgement.objects.filter(submission = self).first()
+        return judgements.total()
+
+    def judge_2_marks(self):
+        judgements = Judgement.objects.filter(submission = self).last()   
+        return str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3)
+    
+    def judge_2_total(self):
+        judgements = Judgement.objects.filter(submission = self).last()   
+        return judgements.total()
+    
 class Judgement(models.Model):
     judge = models.ForeignKey(User, models.CASCADE)
     submission = models.ForeignKey(Submissions, on_delete=models.CASCADE)
