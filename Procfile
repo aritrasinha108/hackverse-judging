@@ -1,0 +1,1 @@
+web: gunicorn hackverse_judging.wsgi
