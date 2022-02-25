@@ -79,6 +79,17 @@ def view_submission(request,sub_id):
             judgement.param1 = judgeform.cleaned_data['param_1'] 
             judgement.param2 = judgeform.cleaned_data['param_2'] 
             judgement.param3 = judgeform.cleaned_data['param_3'] 
+            judgement.param4 = judgeform.cleaned_data['param_4']
+
+            if judgeform.cleaned_data['param_5']: 
+                judgement.param5 = judgeform.cleaned_data['param_5'] 
+            else:
+                judgement.param5 = 0
+
+            if judgeform.cleaned_data['param_6']: 
+                judgement.param6 = judgeform.cleaned_data['param_6'] 
+            else:
+                judgement.param6 = 0
             judgement.save()
             return redirect('View')
         submission = Submissions.objects.get(pk = sub_id) 

@@ -11,21 +11,18 @@ Submissions
 <br>
 <br>
 <div class="container">
-    <table class="table">
+    <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
             
             <th scope="col">Title</th>
             <th scope="col">Team</th>
-            <th scope="col">Leader</th>
-            <th scope="col">Contact Email</th>
-            <th scope="col">Contact Phone</th>
             <th scope="col">DevFolio</th>
             <th scope="col">Codebase</th>
             <th scope="col">Judge 1 Name</th>
             <th scope="col">Judge 2 Name</th>
-            <th scope="col" class="text-center" colspan="3">Judge 1 Marks</th>
-            <th scope="col"colspan="3" class="text-center">Judge 2 Marks</th>
+            <th scope="col" class="text-center" colspan="6">Judge 1 Marks</th>
+            <th scope="col"colspan="6" class="text-center">Judge 2 Marks</th>
             <th scope="col">Total</th>
             <th scope="col">Actions</th>
           </tr>
@@ -36,15 +33,18 @@ Submissions
             <th scope="col"></th>
             <th scope="col"></th>
             <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
             <th scope="col">Param1</th>
             <th scope="col">Param2</th>
             <th scope="col">Param3</th>
+            <th scope="col">Param4</th>
+            <th scope="col">Param5</th>
+            <th scope="col">Param6</th>
             <th scope="col">Param1</th>
             <th scope="col">Param2</th>
             <th scope="col">Param3</th>
+            <th scope="col">Param4</th>
+            <th scope="col">Param5</th>
+            <th scope="col">Param6</th>
             <th scope="col"></th>
             <th scope="col"></th>
         
@@ -56,9 +56,6 @@ Submissions
             {% for s in submissions %}
             <td><a href="/auth/submissions/{{s.id}}">{{s.title}}</a></td>
             <td>{{s.team_name}}</td>
-            <td>{{s.member_name}}</td>
-            <td>{{s.member_email}}</td>
-            <td>{{s.member_phone}}</td>
             <td><a href={{s.devfolio_link}}>Click  Here</a> </td>
             <td><a href={{s.codebase_link}}>Click Here</a> </td>
             <td> {{ s.Judge1 }}</td>
@@ -67,14 +64,32 @@ Submissions
             <td>{{j.param1}}</td>
             <td>{{j.param2}} </td>
             <td>{{j.param3}} </td>
-            {% empty %}
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
-            <td>-</td>
+            <td>{{j.param4}} </td>
+            <td>{{j.param5}} </td>
+            <td>{{j.param6}} </td>
             {% endfor %}
+
+            {% if s.marked == 0 %}
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            {% elif   s.marked == 1 %}
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            {% endif %}
             <td>{{s.total}}</td>
             <td>
               {% if user.is_staff %}

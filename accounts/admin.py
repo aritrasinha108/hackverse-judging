@@ -27,6 +27,8 @@ class SubmissionsResource(resources.ModelResource):
             'description',
             'devfolio_link',
             'codebase_link',
+            'primary_track',
+            'secondary_track',
             'team_name',
             'member_name',
             'member_email',
