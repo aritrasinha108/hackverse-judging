@@ -2,7 +2,7 @@ from wsgiref.validate import validator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.core.exceptions import ObjectDoesNotExist
 # Create your models here.
 
 class User(AbstractUser):
@@ -33,33 +33,54 @@ class Submissions(models.Model):
         return tot
     
     def Judge1(self):
+        judge1 = "Not Assigned"
         judges = self.judges_assigned.all() 
-        return judges[0].username
+        judge1 = judges[0].username
+        return judge1
 
     def Judge2(self):
-       judges = self.judges_assigned.all() 
-       return judges[1].username
+        judge2 = "Not Assigned"
+        judges = self.judges_assigned.all() 
+        judge2 = judges[1].username
+        return judge2
+
 
     def judge_1_marks(self):
+        marks = "Not marked" 
         judgements = Judgement.objects.filter(submission = self).first()
-        return str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5)
+        if judgements:
+            marks = str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5)
+        return marks
 
     def judge_1_total(self):
+        tot =0
         judgements = Judgement.objects.filter(submission = self).first()
-        return judgements.total()
+        if judgements:
+            tot += judgements.total()
+        return tot
 
     def judge_2_marks(self):
-        judgements = Judgement.objects.filter(submission = self).last()   
-        return str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5)
+        marks = "Not marked" 
+        judgements = Judgement.objects.filter(submission = self).last()
+        if judgements:
+            marks = str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5)
+        return marks
+
     
     def judge_2_total(self):
-        judgements = Judgement.objects.filter(submission = self).last()   
-        return judgements.total()
+        tot =0
+        judgements = Judgement.objects.filter(submission = self).last()
+        if judgements:
+            tot += judgements.total()
+        return tot
+
     
     def marked(self):
-        judgements = self.judgement_set.count()
-        return judgements
-    
+        try:
+            judgements = self.judgement_set.count()
+            return judgements
+        except ObjectDoesNotExist:
+            return 0
 class Judgement(models.Model):
     judge = models.ForeignKey(User, models.CASCADE)
     submission = models.ForeignKey(Submissions, on_delete=models.CASCADE)

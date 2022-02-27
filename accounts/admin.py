@@ -1,3 +1,4 @@
+from dataclasses import fields
 from django.contrib import admin
 
 from import_export import resources
@@ -12,8 +13,6 @@ from .models import Submissions, User, Judgement
 class SubmissionsResource(resources.ModelResource):
 
     total = Field()
-    Judge1 = Field()
-    Judge2 = Field()
     judge_1_marks = Field()
     judge_1_total = Field()
     judge_2_marks = Field()
@@ -21,6 +20,19 @@ class SubmissionsResource(resources.ModelResource):
 
     class Meta:
         model = Submissions
+        fields =    ('id',
+            'title',
+            'description',
+            'devfolio_link',
+            'codebase_link',
+            'primary_track',
+            'secondary_track',
+            'team_name',
+            'member_name',
+            'member_email',
+            'member_phone',
+            'judges_assigned')
+
         export_order = (
             'id',
             'title',
@@ -34,8 +46,6 @@ class SubmissionsResource(resources.ModelResource):
             'member_email',
             'member_phone',
             'judges_assigned',
-            'Judge1',
-            'Judge2',
             'judge_1_marks',
             'judge_1_total',
             'judge_2_marks',
@@ -46,12 +56,6 @@ class SubmissionsResource(resources.ModelResource):
 
     def dehydrate_total(self, submission):
         return submission.total()
-    
-    def dehydrate_Judge1(self, submission):
-        return submission.Judge1()
-    
-    def dehydrate_Judge2(self, submission):
-        return submission.Judge2()
     
     def dehydrate_judge_1_marks(self, submission):
         return submission.judge_1_marks()
