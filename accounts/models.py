@@ -49,7 +49,7 @@ class Submissions(models.Model):
         marks = "Not marked" 
         judgements = Judgement.objects.filter(submission = self).first()
         if judgements:
-            marks = str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5)
+            marks = str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5) + ", " + str(judgements.param6)
         return marks
 
     def judge_1_total(self):
@@ -63,7 +63,7 @@ class Submissions(models.Model):
         marks = "Not marked" 
         judgements = Judgement.objects.filter(submission = self).last()
         if judgements:
-            marks = str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5)
+            marks = str(judgements.param1) + ", " + str(judgements.param2) + ", " + str(judgements.param3) + ", " + str(judgements.param4) + ", " + str(judgements.param5) + ", " + str(judgements.param6)
         return marks
 
     
